@@ -1,2 +1,7 @@
-# The-Nun-v0.2.0-Moon-Trilogy-Open-Source
-This is the open source of the game "The Nun" Diamond Version V0.2.0
+# RE Nun — workspace
+
+* `source/` — extracted, Steam-free, open-source-ready game source (see `source/README.md`)
+* `game/`   — runnable standalone copy: original Electron runtime with `resources/app/` (the source) replacing `app.asar`. Launch via `The Nun Steam.exe` (title bar shows "The Nun", no Steam).
+* `tools/`  — `extract-asar.js`, dependency-free asar extractor with SHA-256 verification used to produce `source/`.
+
+Original untouched distribution: `A:\Project\RE Nun\The_Nun_v0.2.0_diamond`.
