@@ -1,0 +1,18 @@
+{
+  "name": "thenun",
+  "version": "0.2.0",
+  "description": "The Nun by FleshForge Studio",
+  "main": "electron/main.js",
+  "author": "FleshForge Studio",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron ."
+  },
+  "buildMode": "standalone",
+  "appEdition": "diamond",
+  "saveCompatibilityVersion": "diamond",
+  "isProduction": false,
+  "assetsCompressed": false,
+  "assetsUpscaled": false,
+  "appDistribution": "patreon"
+}

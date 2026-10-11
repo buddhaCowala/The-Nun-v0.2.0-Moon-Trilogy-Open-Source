@@ -1,0 +1,394 @@
+/* The Nun settings and pause menu */
+
+#pause-menu-overlay .pause-menu-box,
+#pause-menu-overlay .pause-menu-box *,
+#settings-panel,
+#settings-panel * {
+    font-family: Georgia, serif;
+}
+
+#pause-menu-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 6, 10, 0.76);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+    z-index: 100000;
+}
+
+body.menu-active #pause-menu-overlay {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+#pause-menu-overlay.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pause-menu-box {
+    width: 378px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pause-menu-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.pause-menu-box .TS_menu_button {
+    font-size: 37px;
+    min-height: 44px;
+    margin-bottom: 11px;
+    padding-left: 0;
+    color: var(--nd-root-soft);
+    transform: none !important;
+    transition: color 0.22s ease;
+}
+
+.pause-menu-box .TS_menu_button::before,
+.pause-menu-box .TS_menu_button::after {
+    display: none !important;
+}
+
+.pause-menu-box .TS_menu_button:hover,
+.pause-menu-box .TS_menu_button:focus-visible {
+    color: #fff;
+    transform: none !important;
+}
+
+/* The Controls section made the panel taller than the 1080 stage (it already was in
+   25 of the 30 languages): centred and a little tighter, it fits in all of them. */
+#settings-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 539px;
+    /* min-height: 200px; */
+    /* transform: translate(-50%, calc(-50% + 72px)); */
+    padding: 24px 34px;
+    z-index: 100001;
+}
+
+#settings-panel.panel-visible {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#settings-panel.panel-closing {
+    transform: translate(-50%, calc(-50% + 72px));
+    opacity: 0;
+}
+
+.settings-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.settings-title {
+    font-size: 52px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.settings-section {
+    padding: 8px 0 0;
+}
+
+.settings-section-title {
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+    padding: 11px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid var(--nd-root-soft);
+    border-radius: 16px;
+}
+
+.settings-label {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.settings-select {
+    min-width: 220px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--nd-root-soft);
+    background: rgba(0, 0, 0, 0.18);
+    color: #ffffff;
+    font-size: 19px;
+    cursor: pointer;
+}
+.settings-select:hover,
+.settings-select:focus,
+.settings-select:focus-visible {
+    cursor: pointer;
+}
+
+.settings-select:focus {
+    outline: none;
+    border-color: var(--nd-root-soft);
+    box-shadow: 0 0 0 3px rgb(var(--nd-root-strong-rgb) / 0.18);
+}
+
+.settings-select option {
+    background: #09121a;
+    color: #ffffff;
+}
+
+.volume-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 250px;
+    justify-content: flex-end;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 0 0 170px;
+    width: 170px;
+    height: 6px;
+    background: linear-gradient(145deg, rgb(248 111 130 / 0%), rgb(94 32 44 / 0%));
+    border: 2px solid var(--nd-root-soft);
+    border-radius: 999px;
+    outline: none;
+    margin-left: 32px;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid var(--nd-root-soft);
+    box-shadow: 0 0 12px rgb(var(--nd-root-strong-rgb) / 0.32);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid var(--nd-root-soft);
+    box-shadow: 0 0 12px rgb(var(--nd-root-strong-rgb) / 0.32);
+}
+
+.volume-value {
+    min-width: 45px;
+    width: 100%;
+    text-align: right;
+    color: #ffffff;
+    font-size: 17px;
+}
+
+#gamma-value,
+.gamma-test-value {
+    flex: 0 0 20px;
+    /* min-width: 112px; */
+    white-space: nowrap;
+}
+
+/* Mouse sensitivity: a shorter slider, so its longer label ("Mausempfindlichkeit",
+   "Чувствительность мыши") keeps its room instead of pushing the value out of the row. */
+.settings-row--sensitivity .settings-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.settings-row--sensitivity .volume-slider-container {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+#mouse-sensitivity-slider {
+    flex-basis: 140px;
+    width: 140px;
+    margin-left: 0;
+}
+
+#mouse-sensitivity-value {
+    flex: 0 0 48px;
+    min-width: 48px;
+    white-space: nowrap;
+}
+
+.settings-inline-button {
+    padding: 8px 12px;
+    border: 2px solid var(--nd-root-soft);
+    border-radius: 10px;
+    background: rgb(0 0 0 / 18%);
+    color: #ffffff;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.settings-inline-button:hover,
+.settings-inline-button:focus-visible {
+    background: rgb(var(--nd-root-strong-rgb) / 0.34);
+    border-color: var(--nd-root-soft);
+    color: #fff2f2;
+    outline: none;
+}
+
+#gamma-test-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    z-index: 3;
+}
+
+#gamma-test-overlay.is-visible {
+    display: flex;
+}
+
+.gamma-test-card {
+    width: 100%;
+    max-width: 470px;
+    padding: 24px;
+    border: 2px solid var(--nd-root-soft);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(12, 16, 20, 0.98), rgba(7, 10, 14, 0.98));
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.gamma-test-title {
+    font-size: 24px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-align: center;
+}
+
+.gamma-test-instruction {
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.gamma-test-surface {
+    --gamma-test-bg-lift: 0.006;
+    --gamma-test-highlight: 0.008;
+    --gamma-test-text-alpha: 0.022;
+    min-height: 200px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, var(--gamma-test-highlight)), rgba(255, 255, 255, 0) 42%),
+        linear-gradient(180deg, rgba(18, 21, 24, calc(var(--gamma-test-bg-lift) + 0.02)) 0%, rgba(2, 3, 4, 1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.gamma-test-message {
+    color: rgba(196, 202, 210, var(--gamma-test-text-alpha));
+    font-size: 28px;
+    line-height: 1.25;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.88);
+}
+
+.gamma-test-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.gamma-test-slider {
+    flex-basis: 220px;
+    width: 220px;
+}
+
+#settings-build-mode,
+#settings-highest-record,
+#window-mode-select,
+#resolution-select,
+#click-sound-select {
+    color: #ffffff;
+}
+
+.settings-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+
+.settings-stat-value {
+    font-size: 21px;
+    color: #ffffff;
+}
+
+@media (max-width: 720px) {
+    #settings-panel {
+        min-height: 0;
+        padding: 22px 18px;
+    }
+
+    .settings-title {
+        font-size: 40px;
+    }
+
+    .settings-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .volume-slider-container,
+    .settings-select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .settings-stat-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,935 @@
+:root {
+    --nd-ink: #05070b;
+    --nd-panel-top: rgba(22, 16, 18, 0.92);
+    --nd-panel-mid: rgba(15, 10, 13, 0.96);
+    --nd-panel-bottom: rgba(7, 4, 6, 0.98);
+    --nd-cyan: #ffd0d6;
+    --nd-cyan-strong: #fff1f3;
+    --nd-teal: #d27686;
+    --nd-red: var(--nd-root, #8e141e);
+    --nd-red-strong: var(--nd-root-strong, #f86f82);
+    --nd-amber: #f0c06a;
+    --nd-copy: #e6dde0;
+    --nd-copy-muted: #aa959c;
+    --relative-width: min(100vw, 1600px);
+}
+
+#screen-transition-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgb(var(--nd-root-strong-rgb) / 0.1), rgba(0, 0, 0, 0.95) 58%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 650ms ease;
+    z-index: 200000;
+}
+
+#screen-transition-overlay.is-visible {
+    opacity: 1;
+}
+
+#screen-transition-overlay.screen-transition-overlay--opaque {
+    background: #000000;
+}
+
+.TS_background {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 1500;
+    backdrop-filter: blur(16px) saturate(0.84) brightness(0.62);
+    -webkit-backdrop-filter: blur(16px) saturate(0.84) brightness(0.62);
+    transition: opacity 700ms ease, filter 700ms ease, visibility 0s linear 700ms;
+}
+
+.TS_background img,
+.TS_background video,
+#TS_background_overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.TS_background.is-visible,
+.titlescreen.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.TS_background.is-exiting,
+.titlescreen.is-exiting {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.titlescreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: none;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 1600;
+    justify-content: center;
+    transform: translate(-50%, calc(-50% + 18px));
+    filter: blur(10px);
+    transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1), filter 700ms ease, visibility 0s linear 700ms;
+}
+
+.titlescreen.is-visible {
+    pointer-events: auto;
+    transform: translate(-50%, -50%);
+    filter: blur(0);
+}
+
+.titlescreen.is-visible .TS_left_container,
+.titlescreen.is-visible .TS_right_container,
+.titlescreen.is-visible .TS_titlecont,
+.titlescreen.is-visible .TS_buttonscont,
+.titlescreen.is-visible .version-display {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.titlescreen.is-exiting .TS_left_container,
+.titlescreen.is-exiting .TS_right_container,
+.titlescreen.is-exiting .TS_titlecont,
+.titlescreen.is-exiting .TS_buttonscont,
+.titlescreen.is-exiting .version-display {
+    opacity: 0;
+    transform: translateY(-18px);
+}
+
+.version-display,
+.TS_left_container,
+.TS_right_container,
+.TS_titlecont,
+.TS_buttonscont {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 520ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.version-display {
+    background: linear-gradient(145deg, rgb(var(--nd-root-rgb) / 0.84), rgba(18, 14, 14, 0.96));
+    border: 2px solid rgb(var(--nd-root-soft-rgb) / 0.74);
+    border-radius: 10px;
+    padding: 14px 30px 14px 24px;
+    font-size: 34px;
+    color: rgb(var(--nd-root-soft-rgb) / 1);
+    font-family: Consolas, monospace;
+    position: absolute;
+    top: 6.5%;
+    right: 30px;
+    z-index: 200002;
+    box-shadow: 0 0 18px rgb(var(--nd-root-soft-rgb) / 0.22);
+}
+
+.TS_container {
+    position: relative;
+    flex-grow: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: var(--relative-width);
+    /* min-width: 1350px; */
+}
+
+.TS_left_container {
+    left: 0px;
+    top: 0px;
+    width: 40%;
+    position: relative;
+}
+
+.TS_titlecont {
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 45px;
+    position: relative;
+    left: -50px;
+}
+
+.TS_wordmark {
+    display: grid;
+    gap: 10px;
+    max-width: 560px;
+    justify-items: center;
+}
+
+#title-logo {
+    width: 565px;
+    max-width: min(70vw, 645px);
+    object-fit: contain;
+    position: relative;
+    top: 0px;
+    filter: drop-shadow(0 0 25px rgb(var(--nd-root-strong-rgb) / 0.16));
+    position: relative;
+    left: -50px;
+}
+
+
+.TS_buttonscont {
+    display: block;
+}
+
+.TS_buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: Georgia, serif;
+}
+
+.TS_menu_button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 74px;
+    margin-bottom: 14px;
+    padding-left: 62px;
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: clamp(44px, 3vw, 58px);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.28s ease, transform 0.28s ease;
+}
+
+.TS_menu_button::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--nd-root-soft);
+    background: linear-gradient(145deg, rgb(var(--nd-root-rgb) / 0.98), rgba(26, 7, 10, 0.98));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 20px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translate(-18px, -50%) scale(0.84);
+    transition: opacity 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.TS_menu_button::after {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: 50%;
+    width: 12px;
+    height: 16px;
+    background: var(--nd-root-soft);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    opacity: 0;
+    transform: translate(-18px, -50%) scale(0.84);
+    transition: opacity 0.28s ease, transform 0.28s ease, background 0.28s ease;
+}
+
+.TS_menu_button:hover,
+.TS_menu_button:focus-visible {
+    color: var(--nd-root-soft);
+    transform: translateX(8px);
+    outline: none;
+}
+
+.TS_menu_button:hover::before,
+.TS_menu_button:hover::after,
+.TS_menu_button:focus-visible::before,
+.TS_menu_button:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%) scale(1);
+}
+
+.TS_menu_button:hover::before,
+.TS_menu_button:focus-visible::before {
+    background: linear-gradient(145deg, rgb(var(--nd-root-strong-rgb) / 0.42), rgb(var(--nd-root-rgb) / 0.47)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 18px rgb(var(--nd-root-strong-rgb) / 0.42), 0 10px 20px rgba(0, 0, 0, 0.22);
+}
+
+.TS_menu_button:hover::after,
+.TS_menu_button:focus-visible::after {
+    background: var(--nd-root-soft);
+}
+
+.TS_right_container {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 45%;
+    position: relative;
+    left: 65px;
+}
+
+.TS_overlayMedias {
+    position: absolute;
+    display: flex;
+    max-width: 102%;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-end;
+    align-items: center;
+    left: 93px;
+    width: var(--relative-width);
+    top: 30px;
+    z-index: 1700;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    transition: opacity 520ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1), visibility 520ms;
+    pointer-events: none;
+    margin-right: 399px;
+}
+
+body.menu-active .TS_overlayMedias {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.TS_media {
+    border-radius: 50%;
+    overflow: hidden;
+    height: 100px;
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-right: 15px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.TS_media:focus,
+.TS_media:focus-visible {
+    outline: none;
+}
+
+.TS_media img {
+    height: 100%;
+}
+
+.TS_media:hover,
+.TS_media:focus-visible {
+    transform: scale(1.15);
+}
+
+.TS_wishlist {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    margin-top: 30px;
+    margin-right: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    z-index: 10000;
+}
+
+.TS_wishlist img {
+    height: 138px;
+    width: auto;
+    object-fit: contain;
+}
+
+.TS_wishlist:hover {
+    transform: scale(1.1);
+}
+
+.supporter-panel {
+    width: 100%;
+    max-width: 506px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 165px;
+    height: 805px;
+    align-content: center;
+    align-items: center;
+}
+
+.pc-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    /* gap: 20px; */
+    align-items: center;
+    height: 100%;
+    min-height: 0;
+    position: relative;
+    --pc-expanded-border-color: rgba(140, 233, 255, 0.6);
+    width: max-content;
+}
+
+.pc-card {
+    position: relative;
+    border-radius: 6px;
+    padding: 0;
+    height: 246px;
+    width: 438px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+    cursor: pointer;
+}
+
+.pc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 36px rgba(0, 0, 0, 0.45);
+}
+
+.pc-card:focus-visible,
+.pc-card.pc-current-card {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 36px rgba(0, 0, 0, 0.45);
+    outline: none;
+}
+
+.pc-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+
+.pc-hover {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.72));
+    padding: 18px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    justify-content: center;
+}
+
+.pc-card:hover .pc-hover,
+.pc-card:focus-visible .pc-hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pc-hover-title {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    color: var(--MMS-supporter-card-color, white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0 0 12px rgba(54, 178, 194, 0.5);
+}
+
+.pc-base {
+    background: linear-gradient(145deg, rgba(10, 24, 34, 0.95), rgba(4, 9, 16, 0.95));
+    --MMS-supporter-card-color: rgba(248, 111, 130, 0.9);
+}
+
+.pc-gold {
+    background: linear-gradient(145deg, rgba(34, 24, 8, 0.95), rgba(16, 10, 4, 0.95));
+    --MMS-supporter-card-color: rgba(232, 184, 75, 0.9);
+}
+
+.pc-diamond {
+    background: linear-gradient(145deg, rgba(8, 24, 34, 0.95), rgba(4, 10, 18, 0.95));
+    --MMS-supporter-card-color: rgba(126, 207, 244, 0.9);
+}
+
+.pc-expanded-view {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-self: flex-start;
+    min-height: 0;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+    border: 2px solid var(--pc-expanded-border-color);
+    background: linear-gradient(135deg, rgba(8, 17, 26, 0.92), rgba(3, 7, 14, 0.95));
+    box-shadow: 0 24px 42px rgba(0, 0, 0, 0.5);
+    padding: 12px;
+    box-sizing: border-box;
+    gap: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.42s ease, transform 0.42s ease, visibility 0s linear 0.42s;
+}
+
+.pc-grid.pc-grid-expanded .pc-card {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+    pointer-events: none;
+}
+
+.pc-grid.pc-grid-expanded .pc-expanded-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    visibility: visible;
+    transition: opacity 0.42s ease, transform 0.42s ease;
+}
+
+.pc-expanded-top {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    gap: 5px;
+    width: 100%;
+    min-height: fit-content;
+    align-content: stretch;
+    align-items: flex-start;
+}
+
+.pc-expanded-tier-box {
+    align-self: center;
+    height: 55px;
+    padding: 10px;
+    border: 2px solid var(--pc-expanded-border-color);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--pc-expanded-border-color, #ffffff);
+    font-family: Georgia, serif;
+    font-size: 27px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.pc-expanded-copy {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    min-height: fit-content;
+}
+
+.pc-expanded-text {
+    min-height: fit-content;
+    padding: 10px;
+    color: #f0f7ff;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    text-align: left;
+    max-width: 100%;
+    gap: 6px;
+    left: 10px;
+    margin-left: 0;
+}
+
+.pc-expanded-text-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.pc-expanded-text-item::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(240, 247, 255, 0.9);
+    flex: 0 0 6px;
+    margin-top: 8px;
+}
+
+.pc-expanded-media {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    min-height: 0;
+    height: 100%;
+}
+
+.pc-video-box {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pc-video-box:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.68);
+    outline-offset: 2px;
+}
+
+.pc-video-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 18px rgba(140, 233, 255, 0.18);
+}
+
+.pc-video-box img,
+.pc-video-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pc-grid[data-expanded-tier="base"] {
+    --pc-expanded-border-color: rgba(248, 111, 130, 0.6);
+}
+
+.pc-grid[data-expanded-tier="gold"] {
+    --pc-expanded-border-color: rgba(232, 184, 75, 0.6);
+}
+
+.pc-grid[data-expanded-tier="diamond"] {
+    --pc-expanded-border-color: rgba(126, 207, 244, 0.6);
+}
+
+.pc-expanded-stats {
+    margin-bottom: 0;
+}
+
+.pc-expanded-close {
+    align-self: center;
+    min-width: 120px;
+}
+
+@media (max-width: 1280px) {
+    .TS_container {
+        /* flex-direction: column; */
+        justify-content: center;
+        padding: 120px 32px 48px;
+        min-width: 0;
+    }
+
+    .TS_left_container,
+    .TS_right_container {
+        width: min(100%, 820px);
+        left: 0;
+        top: 0;
+    }
+
+    .TS_titlecont {
+        min-height: 0;
+        margin-bottom: 24px;
+        left: 0;
+    }
+
+    .version-display {
+        top: 28px;
+        right: 28px;
+    }
+
+    .TS_overlayMedias {
+        width: 100%;
+        justify-content: center;
+        padding-right: 0;
+    }
+
+    .supporter-panel {
+        margin-top: 30px;
+        height: auto;
+    }
+}
+
+@media (max-width: 780px) {
+    .TS_container {
+        padding: 110px 18px 36px;
+    }
+
+    .TS_menu_button {
+        min-height: 58px;
+        padding-left: 48px;
+        font-size: 38px;
+    }
+
+    .TS_menu_button::before {
+        width: 32px;
+        height: 32px;
+    }
+
+    .TS_menu_button::after {
+        left: 13px;
+    }
+
+    #title-logo {
+        width: min(90vw, 520px);
+    }
+
+    .version-display {
+        font-size: 24px;
+        padding: 10px 18px;
+    }
+
+    .TS_overlayMedias {
+        top: 8px;
+    }
+
+    .TS_media {
+        width: 72px;
+        height: 72px;
+        margin-top: 12px;
+        margin-right: 10px;
+    }
+
+    .pc-grid {
+        width: min(100%, 360px);
+    }
+
+    .pc-card {
+        height: 210px;
+    }
+}
+
+/* ── How to play overlay (title Tutorial button, no WebGL) ─ */
+.tutorial-overlay { position: fixed; inset: 0; z-index: 300000; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.82); }
+.tutorial-overlay.hidden { display: none; }
+.tutorial-popup { background: linear-gradient(180deg, var(--nd-panel-top) 0%, var(--nd-panel-bottom) 100%); border: 1px solid rgba(210, 118, 134, 0.35); border-radius: 6px; max-width: min(880px, 92vw); width: 100%; max-height: 92vh; overflow-y: auto; padding: 52px 60px 48px; display: flex; flex-direction: column; gap: 28px; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7); }
+.tutorial-title { font-size: 1.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nd-cyan-strong); margin: 0; text-align: center; }
+.tutorial-body { color: var(--nd-copy); font-size: 1.05rem; line-height: 1.72; display: flex; flex-direction: column; gap: 22px; }
+.tutorial-body h3 { font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--nd-teal); margin: 0 0 4px; }
+.tutorial-body p { margin: 0; }
+.tutorial-continue-button { align-self: center; padding: 13px 52px; background: transparent; border: 1px solid var(--nd-teal); border-radius: 3px; color: var(--nd-cyan-strong); font-size: 1.5rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 180ms ease, border-color 180ms ease; }
+.tutorial-continue-button:hover { background: rgba(210, 118, 134, 0.15); border-color: var(--nd-cyan-strong); }
+
+/* STEAM edition partner panel (cross-promo cards shown instead of the Support Hub tiers) */
+.steam-panel {
+    width: 100%;
+    max-width: 615px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 105px;
+    height: 790px;
+    align-content: center;
+    align-items: center;
+}
+
+.steam-panel .pc-card {
+    border: 4px solid rgb(255 255 255 / 65%);
+    cursor: pointer;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(0.7);
+    transition: 0.3s ease-in-out;
+}
+
+.steam-panel .pc-grid {
+    align-content: center;
+    gap: 0;
+}
+
+/* "OUR GAMES" heading, a real grid item sitting in flow between the two cards.
+   Uses the titlescreen font (Spooky Mother, via --app-font-family). */
+.steam-grid-title {
+    position: relative;
+    text-align: center;
+    font-family: var(--app-font-family), Impact, sans-serif;
+    font-size: 44px;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    /* margin-bottom: 19px; */
+    background: linear-gradient(7deg, rgb(86 0 1) 0%, rgb(86 0 1) 43%, rgb(138 0 209) 52%, rgb(138 0 209) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.steam-panel .pc-image {
+    height: 100%;
+    width: 91%;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Per-partner card accent borders */
+#steam-le {
+    border: solid 4px rgb(138 0 209);
+    border-radius: 18px;
+}
+
+/* Sampled from HA_logo.png's dominant wordmark colour, so the card frame matches
+   the artwork it holds. */
+#steam-ha {
+    border: solid 4px rgb(86 0 1);
+    border-radius: 18px;
+}
+
+/* Hover: gentle zoom, full brightness, white border. */
+.steam-panel .pc-card:hover {
+    transform: scale(1.03);
+    filter: brightness(1);
+    box-shadow: none;
+}
+
+/* White border on hover (ID specificity needed to beat the accent colors above) */
+#steam-le:hover,
+#steam-ha:hover {
+    border-color: #ffffff;
+}
+
+/* Hover artwork, the same system as Lewd Elevator's Steam panel (code/titlescreen.css
+   there): each card swaps its colored logo for its white *_logo_hover.png, drawn as a
+   ::after overlay (no extra <img> markup). The overlay is the exact box of the
+   .pc-image (91% x 100%, centred, cover) so the two logos sit pixel on pixel, and the
+   fade is staggered — the white logo is fully in before the colored one leaves (and
+   the reverse on the way out) — so the card never dips half-transparent mid-swap. */
+.steam-panel .pc-card {
+    transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.45s ease,
+        box-shadow 0.45s ease;
+    will-change: transform, filter;
+    backface-visibility: hidden;
+}
+
+.steam-panel .pc-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4.5%;
+    width: 91%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.12s;
+    pointer-events: none;
+}
+
+.steam-panel .pc-card .pc-image {
+    transition: opacity 0.3s ease 0s;
+}
+
+#steam-le::after {
+    background-image: url('../assets/icons/LE_logo_hover.png');
+}
+
+#steam-ha::after {
+    background-image: url('../assets/icons/HA_logo_hover.png');
+}
+
+#steam-le:hover::after,
+#steam-ha:hover::after {
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+#steam-le:hover .pc-image,
+#steam-ha:hover .pc-image {
+    opacity: 0;
+    transition-delay: 0.12s;
+}
+
+/* Continue a saved run (scripts/runFlow.js) */
+.TS_menu_button--continue {
+    font-size: clamp(34px, 2.3vw, 44px);
+    color: rgb(var(--nd-root-soft-rgb) / 1);
+}
+
+.TS_run_progress {
+    margin-top: 6px;
+    padding-left: 62px;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.TS_run_progress:empty {
+    display: none;
+}
+
+
+/* STEAM: Discord link relocated beside the version chip, outside it and to its left. */
+.version-row {
+    position: absolute;
+    top: 6.5%;
+    right: 30px;
+    z-index: 200002;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 520ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.titlescreen.is-visible .version-row {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.titlescreen.is-exiting .version-row {
+    opacity: 0;
+    transform: translateY(-18px);
+}
+
+/* The row positions the pair and drives the title-screen fade now, so the chip's own
+   absolute placement and entrance animation are cancelled. Same specificity as
+   '.titlescreen.is-visible .version-display'; this wins on source order because the
+   whole block is appended to the end of titlescreen.css. */
+.titlescreen .version-row .version-display {
+    position: static;
+    top: auto;
+    right: auto;
+    opacity: 1;
+    transform: none;
+}
+
+.version-row .TS_media {
+    height: 100px;
+    width: 100px;
+    margin: 0;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.version-row .TS_media img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}

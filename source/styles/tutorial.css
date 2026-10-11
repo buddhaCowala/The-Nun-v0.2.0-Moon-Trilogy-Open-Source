@@ -1,0 +1,430 @@
+/* =====================================================================
+   INTERACTIVE TUTORIAL (scripts/tutorial.js)
+   Stage px (inside #app-stage). Crimson / gold, the run-card look.
+   ===================================================================== */
+
+.tut-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 250000;
+    pointer-events: none;
+    font-family: var(--app-font-family);
+    color: #fff;
+}
+
+/* info steps: clicks stop here, the world is frozen */
+.tut-blocker {
+    position: absolute;
+    inset: 0;
+    display: none;
+    pointer-events: auto;
+    cursor: default;
+}
+.tut-layer.is-info .tut-blocker { display: block; }
+
+/* the dim with its spotlight cut-out: one box, a huge shadow */
+.tut-hole {
+    position: absolute;
+    border-radius: 14px;
+    box-shadow: 0 0 0 4000px rgba(4, 2, 3, 0.74);
+    opacity: 0;
+    transition: left 0.45s cubic-bezier(.2,.8,.2,1), top 0.45s cubic-bezier(.2,.8,.2,1),
+        width 0.45s cubic-bezier(.2,.8,.2,1), height 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.35s ease;
+}
+.tut-layer.is-info .tut-hole { opacity: 1; }
+.tut-layer.is-cinematic .tut-hole { box-shadow: 0 0 0 4000px rgba(4, 2, 3, 0.45); }
+
+.tut-ring {
+    position: absolute;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 214, 120, 0.95);
+    box-shadow: 0 0 22px rgba(255, 200, 96, 0.55), inset 0 0 18px rgba(255, 200, 96, 0.25);
+    opacity: 0;
+    transition: left 0.45s cubic-bezier(.2,.8,.2,1), top 0.45s cubic-bezier(.2,.8,.2,1),
+        width 0.45s cubic-bezier(.2,.8,.2,1), height 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease;
+    animation: tut-ring 1.4s ease-in-out infinite;
+}
+.tut-layer.is-do .tut-ring { opacity: 0 !important; }
+
+@keyframes tut-ring {
+    0%, 100% { outline: 0 solid rgba(255, 214, 120, 0.5); outline-offset: 0; }
+    50% { outline: 8px solid rgba(255, 214, 120, 0); outline-offset: 10px; }
+}
+
+/* cinematic bars for Jane's entrance */
+.tut-letterbox i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 110px;
+    background: #000;
+    transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+}
+.tut-letterbox i:first-child { top: 0; transform: translateY(-100%); }
+.tut-letterbox i:last-child { bottom: 0; transform: translateY(100%); }
+.tut-layer.is-cinematic .tut-letterbox i { transform: none; }
+
+/* the panel */
+.tut-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 560px;
+    padding: 22px 26px 20px;
+    border-radius: 14px;
+    border: 2px solid rgb(var(--nd-root-soft-rgb) / 0.55);
+    background: linear-gradient(160deg, rgb(var(--nd-root-rgb) / 0.6), rgba(10, 6, 8, 0.95));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 214, 120, 0.12) inset;
+    pointer-events: auto;
+    transition: transform 0.45s cubic-bezier(.2,.8,.2,1);
+}
+.tut-layer.is-do .tut-panel { width: 440px; background: linear-gradient(160deg, rgb(var(--nd-root-rgb) / 0.45), rgba(10, 6, 8, 0.86)); }
+.tut-panel.is-in .tut-panel__title,
+.tut-panel.is-in .tut-panel__text,
+.tut-panel.is-in .tut-keys,
+.tut-panel.is-in .tut-mock { animation: tut-in 0.5s ease both; }
+.tut-panel.is-in .tut-panel__text { animation-delay: 0.08s; }
+.tut-panel.is-in .tut-keys, .tut-panel.is-in .tut-mock { animation-delay: 0.16s; }
+.tut-panel.is-in .tut-sens { animation: tut-in 0.5s ease 0.22s both; }
+
+@keyframes tut-in {
+    from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+    to { opacity: 1; transform: none; filter: none; }
+}
+
+.tut-panel__head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgb(var(--nd-root-soft-rgb) / 0.95);
+}
+.tut-panel__count { color: #ffd678; letter-spacing: 0.15em; }
+.tut-panel__title {
+    margin: 8px 0 8px;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+.tut-panel__text {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.tut-progress {
+    height: 4px;
+    margin: 18px 0 14px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+.tut-progress i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, rgb(var(--nd-root-strong-rgb)), #ffd678);
+    transition: width 0.5s ease;
+}
+
+.tut-panel__actions { display: flex; justify-content: flex-end; gap: 14px; }
+
+.tut-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 22px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    background: linear-gradient(145deg, rgb(var(--nd-root-strong-rgb) / 0.35), rgb(var(--nd-root-rgb) / 0.95));
+    color: #fff;
+    font-family: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.tut-btn:hover, .tut-btn:focus-visible { transform: scale(1.04); border-color: #fff; box-shadow: 0 0 22px rgb(var(--nd-root-strong-rgb) / 0.45); outline: none; }
+.tut-btn--primary { border-color: #ffd678; box-shadow: 0 0 18px rgba(255, 200, 96, 0.3); }
+.tut-btn--ghost { border-color: rgba(255, 255, 255, 0.28); background: rgba(20, 20, 20, 0.8); font-size: 17px; color: rgba(255, 255, 255, 0.75); }
+.tut-btn__kbd {
+    padding: 1px 7px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-family: inherit;
+    opacity: 0.8;
+}
+.tut-btn__badge {
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: #ffd678;
+    color: #2a0a10;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* keycaps: light up while held */
+.tut-keys { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.tut-keys:empty { display: none; }
+.tut-key { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.tut-key kbd {
+    min-width: 50px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-bottom-width: 5px;
+    background: rgba(0, 0, 0, 0.55);
+    font-family: inherit;
+    font-size: 20px;
+    text-align: center;
+    transition: all 0.08s ease;
+}
+.tut-key small { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+/* − and + in a plain serif: the UI font draws "+" as a small gothic cross */
+.tut-layer .tut-key--symbol kbd { font-family: Georgia, 'Times New Roman', serif !important; font-weight: bold; }
+.tut-key.is-down kbd {
+    transform: translateY(3px);
+    border-bottom-width: 2px;
+    border-color: #ffd678;
+    background: rgba(255, 200, 96, 0.28);
+    box-shadow: 0 0 18px rgba(255, 200, 96, 0.6);
+}
+
+/* objective chip */
+.tut-goal {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 214, 120, 0.4);
+    background: rgba(255, 200, 96, 0.08);
+}
+.tut-goal__label { font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; color: #ffd678; }
+.tut-goal__text { flex: 1; font-size: 19px; }
+.tut-goal__check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    color: transparent;
+    text-align: center;
+    line-height: 24px;
+    transition: all 0.25s ease;
+}
+.tut-layer.is-done .tut-goal { border-color: #9be38f; background: rgba(120, 220, 110, 0.14); }
+.tut-layer.is-done .tut-goal__check { border-color: #9be38f; background: #6fc463; color: #0b1a08; transform: scale(1.2); }
+
+/* the "caught" card preview */
+.tut-mock { display: flex; gap: 12px; margin-top: 16px; }
+.tut-mock__btn {
+    padding: 9px 16px;
+    border-radius: 9px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    background: rgb(var(--nd-root-rgb) / 0.9);
+    font-size: 17px;
+}
+.tut-mock__btn--dim { border-color: rgba(255, 255, 255, 0.3); background: rgba(20, 20, 20, 0.85); color: rgba(255, 255, 255, 0.7); }
+
+/* the world marker on screen */
+.tut-marker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: -14px 0 0 -14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tut-layer.is-info .tut-marker { opacity: 0 !important; }
+.tut-marker__gem {
+    width: 22px;
+    height: 22px;
+    transform: rotate(45deg);
+    border: 2px solid #ffd678;
+    background: rgba(255, 200, 96, 0.35);
+    box-shadow: 0 0 16px rgba(255, 200, 96, 0.8);
+    animation: tut-gem 1.2s ease-in-out infinite;
+}
+.tut-marker.is-edge .tut-marker__gem { background: #ffd678; }
+.tut-marker__dist { font-size: 15px; color: #ffd678; text-shadow: 0 1px 4px #000; }
+@keyframes tut-gem { 50% { transform: rotate(45deg) scale(1.25); } }
+
+/* the sensitivity step: its read-out in the panel... */
+.tut-sens {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 214, 120, 0.25);
+    background: rgba(0, 0, 0, 0.35);
+}
+.tut-sens__head { display: flex; align-items: baseline; gap: 12px; }
+.tut-sens__label { flex: 1; font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+.tut-sens__default {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ffd678;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.tut-sens.is-default .tut-sens__default { opacity: 0.85; }
+.tut-sens__value {
+    min-width: 96px;
+    font-size: 34px;
+    text-align: right;
+    color: #ffd678;
+    text-shadow: 0 0 14px rgba(255, 200, 96, 0.35);
+}
+.tut-sens__value.is-bump { animation: tut-sens-bump 0.22s ease; }
+.tut-sens__track {
+    position: relative;
+    height: 8px;
+    margin: 10px 0 2px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.12);
+}
+.tut-sens.is-limit .tut-sens__track { animation: tut-sens-shake 0.25s ease; }
+.tut-sens__track i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgb(var(--nd-root-strong-rgb)), #ffd678);
+    transition: width 0.12s ease;
+}
+/* where the default (1.00x) sits */
+.tut-sens__track b {
+    position: absolute;
+    top: -5px;
+    width: 2px;
+    height: 18px;
+    margin-left: -1px;
+    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.75);
+}
+.tut-sens__note { margin: 10px 0 0; font-size: 15px; line-height: 1.35; color: rgba(255, 255, 255, 0.62); }
+@keyframes tut-sens-bump { 40% { transform: scale(1.14); } }
+@keyframes tut-sens-shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.tut-layer.is-do.is-done .tut-panel__actions .tut-btn--primary { animation: tut-glow 1.8s ease-in-out infinite; }
+
+/* ...and its two flick marks, projected from the world: the lit one is the next to reach */
+.tut-flick { position: absolute; inset: 0; }
+.tut-layer.is-info .tut-flick { display: none; }
+.tut-flick__mark { position: absolute; left: 0; top: 0; width: 0; height: 0; transition: opacity 0.25s ease; }
+.tut-flick__ring {
+    position: absolute;
+    left: -30px;
+    top: -30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.tut-flick__gem {
+    position: absolute;
+    left: -9px;
+    top: -9px;
+    width: 18px;
+    height: 18px;
+    transform: rotate(45deg);
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.1);
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.tut-flick__mark.is-active .tut-flick__ring {
+    border-color: #ffd678;
+    box-shadow: 0 0 18px rgba(255, 200, 96, 0.6), inset 0 0 12px rgba(255, 200, 96, 0.3);
+    animation: tut-flick-pulse 1.1s ease-in-out infinite;
+}
+.tut-flick__mark.is-active .tut-flick__gem { border-color: #ffd678; background: rgba(255, 200, 96, 0.45); box-shadow: 0 0 14px rgba(255, 200, 96, 0.8); }
+.tut-flick__mark.is-edge:not(.is-active) { opacity: 0.45; }
+/* out of view (or behind the panel): an arrow toward it */
+.tut-flick__mark.is-left::before,
+.tut-flick__mark.is-right::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    border: 8px solid transparent;
+}
+.tut-flick__mark.is-left::before { left: -52px; border-left-width: 0; border-right: 11px solid rgba(255, 255, 255, 0.5); }
+.tut-flick__mark.is-right::before { left: 41px; border-right-width: 0; border-left: 11px solid rgba(255, 255, 255, 0.5); }
+.tut-flick__mark.is-active.is-left::before { border-right-color: #ffd678; }
+.tut-flick__mark.is-active.is-right::before { border-left-color: #ffd678; }
+.tut-flick__mark.is-hit::after {
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: -30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #9be38f;
+    animation: tut-flick-hit 0.45s ease-out forwards;
+}
+@keyframes tut-flick-pulse { 50% { transform: scale(1.12); } }
+@keyframes tut-flick-hit { from { opacity: 1; transform: scale(0.8); } to { opacity: 0; transform: scale(1.9); } }
+
+/* short message (a gentle catch) */
+.tut-toast {
+    position: absolute;
+    left: 50%;
+    top: 36%;
+    max-width: 760px;
+    padding: 14px 26px;
+    border-radius: 10px;
+    border: 1px solid rgb(var(--nd-root-strong-rgb) / 0.7);
+    background: rgba(0, 0, 0, 0.82);
+    font-size: 22px;
+    text-align: center;
+    opacity: 0;
+    transform: translate(-50%, 10px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.tut-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* modal cards: first-run prompt, replay, skip confirm, pause */
+.tut-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 300500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    font-family: var(--app-font-family);
+    color: #fff;
+}
+.tut-modal.is-visible { opacity: 1; }
+.tut-modal__card {
+    width: 760px;
+    padding: 34px 34px 30px;
+    border-radius: 16px;
+    border: 2px solid rgb(var(--nd-root-soft-rgb) / 0.55);
+    background: linear-gradient(160deg, rgb(var(--nd-root-rgb) / 0.6), rgba(10, 6, 8, 0.95));
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    transform: translateY(14px) scale(0.98);
+    transition: transform 0.45s cubic-bezier(.2,.8,.2,1);
+}
+.tut-modal.is-visible .tut-modal__card { transform: none; }
+.tut-modal--small .tut-modal__card { width: 600px; }
+.tut-modal__kicker { font-size: 17px; letter-spacing: 0.3em; text-transform: uppercase; color: rgb(var(--nd-root-soft-rgb) / 0.95); }
+.tut-modal__title { margin: 10px 0 14px; font-size: 48px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: normal; }
+.tut-modal__text { margin: 0 auto; max-width: 620px; font-size: 22px; line-height: 1.4; color: rgba(255, 255, 255, 0.85); }
+.tut-modal__actions { display: flex; justify-content: center; gap: 20px; margin-top: 28px; }
+.tut-modal__actions .tut-btn { padding: 15px 28px; font-size: 23px; }
+.tut-modal__actions .tut-btn--ghost { font-size: 19px; }
+.tut-modal--prompt .tut-btn--primary { animation: tut-glow 1.8s ease-in-out infinite; }
+@keyframes tut-glow { 50% { box-shadow: 0 0 34px rgba(255, 200, 96, 0.6); } }
